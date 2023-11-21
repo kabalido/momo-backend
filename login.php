@@ -13,7 +13,7 @@ $password = sha1($_GET['password']);
 $dbm = DatabaseFactory::getDatabase(DatabaseType::MYSQL);
 $dbo = DatabaseFactory::getDatabase(DatabaseType::ORACLE);
 
-$query = "select subno from users where subno='$msisdn' and password = '$password'";
+$query = "select subno from users where subno='$msisdn' and password = '$password' and is_active='1'";
 
 $query2 = "select subno from crm_user_info where subno='$subno' and prepost_paid='POST'";
 

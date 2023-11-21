@@ -8,7 +8,7 @@ $msisdn = '245'.$_GET['msisdn'];
 
 $db = DatabaseFactory::getDatabase(DatabaseType::MYSQL);
 
-$query = "select transid, amount, madapi_status, transdate, invoice_nr from cdrs_transaction where subno='$msisdn'";
+$query = "select transid, amount, madapi_status, transdate, invoice_nr from cdrs_transaction where subno='$msisdn' order by transdate desc";
 
 
 $rows = $db->executeQuery($query);
