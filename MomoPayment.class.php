@@ -160,21 +160,21 @@ class MoMoPayment
     return $arrResp;
   }
 
-  public function makePayment($msisdn, $invMsisdn,  $amount, $invoiceNum)
+  public function makePayment($msisdn, $amount, $payeeId, $note, $url, $funcCallback)
   {
-    $resp = $this->makeMadapiPaymentRequest($msisdn, $amount, $invoiceNum);
-    // TODO save $resp into the DB if http status is 200 and statusCode = 0000
-    if (!$resp['status']) {
-      // Log it into file or DB
-      return false;
-    }
-    // Insert into cdrs_transaction table
-    return $this->saveTransaction($msisdn, $invMsisdn, $amount, $invoiceNum, $resp);
-    //return $resp;
+    $madApiResp = $this->makeMadapiPaymentRequest($msisdn, $amount, $payeeId, $note, $url);
+    $arrParInfo = [];
+    $arrParInfo['msisdn'] =  $msisdn;
+    $arrParInfo['amount'] =  $amount;
+    $arrParInfo['payeeId'] =  $payeeId;
+    $arrParInfo['note'] =  $note;
+    $arrParInfo['env'] = $this->env;
+    // callback after performing payment
+    $funcCallback($arrParInfo, $madApiResp);
   }
 
 
-  private function makeMadapiPaymentRequest($msisdn, $amount, $invoiceNum)
+  private function makeMadapiPaymentRequest($msisdn, $amount, $payeeId, $note, $url)
   {
     $this->getAuthInfo();
     // TODO Check if token was retrieved successfully.
@@ -189,7 +189,7 @@ class MoMoPayment
     "callingSystem": "GNB_MOMO_PAYMENT",
     "transactionType": "Debit",
     "targetSystem": "ECW",
-    "callbackURL": "https://172.25.50.178:3000/pay_test/callback_receiver.php",
+    "callbackURL": "$url",
     "channel": "MOMO",
     "externalTransactionId": "$correlatorId",
     "amount": {
@@ -207,7 +207,7 @@ class MoMoPayment
     "payer": {
         "payerIdType": "MSISDN",
         "payerId": "$msisdn",
-        "payerNote": "$invoiceNum"
+        "payerNote": "$note"
     },
     "payee": [
         {
@@ -224,7 +224,7 @@ class MoMoPayment
                 "units": "XOF"
             },
             "payeeIdType": "USER",
-            "payeeId": "MADAPI.SP",
+            "payeeId": "$payeeId",
             "payeeNote": null
         }
     ],

@@ -6,7 +6,6 @@
 //include_once('MomoPayment.class.php');
 //include_once('DatabaseFactory.class.php');
 
-
 function eagbExecute($jsonResp){
     $msisdn =  $jsonResp->msisdn;
     $meter = $jsonResp->meter;
@@ -14,13 +13,9 @@ function eagbExecute($jsonResp){
     $method = $jsonResp->method;
     $baseUrl = 'http://10.100.2.179:90/mtngb-eagb-mobile?';
 
-    $transId = $method == 'PAYMENT'? 'el_'.str_replace(".", "", uniqid("", true)): '';
-
-    //echo "$transId\n";
-    //echo "msisdn=$msisdn&meter=$meter&price=$price&requestNumber=1&transactionId=$transId&method=$method\n";
     $arrParams = [
         'PREVIEW' => "msisdn=$msisdn&meter=$meter&price=$price&method=$method",
-        'PAYMENT' => "msisdn=$msisdn&meter=$meter&price=$price&requestNumber=1&transactionId=$transId&method=$method",
+        //'PAYMENT' => "msisdn=$msisdn&meter=$meter&price=$price&requestNumber=1&transactionId=$transId&method=$method",
         'REGISTERED_METER'=> "msisdn=$msisdn&method=$method", // check if user already registered
         'REGISTER'=> "msisdn=$msisdn&meter=$meter&method=$method", // register contador
         'HISTORY' => "meter=$meter&method=$method",
