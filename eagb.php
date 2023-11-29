@@ -3,6 +3,10 @@
 #include('MySql.class.php');
 #include('Utils.class.php');
 
+//include_once('MomoPayment.class.php');
+//include_once('DatabaseFactory.class.php');
+
+
 function eagbExecute($jsonResp){
     $msisdn =  $jsonResp->msisdn;
     $meter = $jsonResp->meter;
